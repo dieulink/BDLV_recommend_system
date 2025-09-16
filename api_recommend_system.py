@@ -25,14 +25,12 @@ games_list = None
 games_id_list = None
 
 def init_database():
-    # Trong Python, khi gán giá trị cho biến trong hàm, mặc định nó sẽ tạo biến cục bộ
-    # Dùng global để chỉ định muốn thay đổi biến toàn cục đã tồn tại
+
     global engine
     engine = create_engine('mysql+pymysql://root:123456@localhost/dashboard')
     print("Đã kết nối với database")
 
 def load_and_preprocess_data():
-    """Tải dữ liệu từ database và tiền xử lý"""
     global games, countVector, similarity
 
     # print(f"{datetime.now()} - Đang tải dữ liệu từ database...")
@@ -78,7 +76,7 @@ def load_and_preprocess_data():
     print(f"Đã cập nhật danh sách game. Số lượng game hiện tại: {len(games_list)}")
 
 def reload_data():
-    """Wrapper function để xử lý ngoại lệ khi reload"""
+
     try:
         load_and_preprocess_data()
     except Exception as e:
@@ -86,12 +84,7 @@ def reload_data():
 
 # định kì cập nhật dữ liệu
 def scheduler_thread():
-    """
-    RELOAD_INTERVAL được định nghĩa là 3600 giây (1 giờ)
-    Dòng này lập lịch để gọi hàm reload_data() cứ mỗi 3600 giây một lần
-    schedule.every() là một API của thư viện schedule để tạo các tác vụ định kỳ
-    .do(reload_data) chỉ định hàm sẽ được thực thi theo lịch
-    """
+
     schedule.every(RELOAD_INTERVAL).seconds.do(reload_data)
     while True:
         # kiểm tra và thực thi các tác vụ đã đến thời điểm chạy
@@ -206,7 +199,7 @@ def filter_game(distance, game_id_input):
 
 def recommender(game_name, game_id):
     # Tìm dòng trong new_data mà có game_name == game.
-    # .index[0]: lấy chỉ số đầu tiên trong DataFrame — chính là vị trí của phim đó trong bảng.
+
     index = games[games['game_name']==game_name].index[0]
     distance = sorted(list(enumerate(similarity[index])), reverse=True, key=lambda vector: vector[1])
     return filter_game(distance, game_id)

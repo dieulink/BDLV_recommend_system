@@ -8,7 +8,7 @@ import time
 
 # config.py
 
-RELOAD_INTERVAL = 60  # 1 giờ (tính bằng giây)
+RELOAD_INTERVAL = 60
 
 # Khởi tạo biến toàn cục
 games = pd.DataFrame()
@@ -17,14 +17,13 @@ countVector = None
 engine = None
 
 def init_database():
-    # Trong Python, khi gán giá trị cho biến trong hàm, mặc định nó sẽ tạo biến cục bộ
-    # Dùng global để chỉ định muốn thay đổi biến toàn cục đã tồn tại
+
     global engine
     engine = create_engine('mysql+pymysql://root:29092003@localhost/dashboard')
     print("Đã kết nối với database")
 
 def load_and_preprocess_data():
-    """Tải dữ liệu từ database và tiền xử lý"""
+
     global games, countVector, similarity
 
     print(f"{datetime.now()} - Đang tải dữ liệu từ database...")\
@@ -65,7 +64,7 @@ def load_and_preprocess_data():
     print(f"Đã cập nhật dữ liệu thành công. Tổng số game: {len(games)}")
 
 def reload_data():
-    """Wrapper function để xử lý ngoại lệ khi reload"""
+
     try:
         load_and_preprocess_data()
     except Exception as e:
